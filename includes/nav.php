@@ -19,16 +19,17 @@
           <a class="nav-link text-light active text-uppercase" href="#">mon panier</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-light text-uppercase" href="#">mon compte</a>
+          <a class="nav-link text-light text-uppercase" href="/includes/inscription.php">mon compte</a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-light text-uppercase" href="#">mes commades</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-light text-uppercase" href="#">mes factures</a>
+          <a class="nav-link text-light text-uppercase" href="/includes/factures.php">mes factures</a>
         </li>
       </ul>
       </div>
     </div>
   </nav>
 </header>
+<!-- includes/inscription.php : lien vers la page inscription a toutes fins utiles -->

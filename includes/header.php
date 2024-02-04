@@ -12,4 +12,5 @@
 
 <?php
     require_once (__DIR__ . '/nav.php');
+    // require_once (__DIR__ . '/inscription.php');
 ?>
