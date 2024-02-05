@@ -1,7 +1,6 @@
 <?php
-include 'header.php';
+  require_once (__DIR__ . '/../../includes/header.php');
 ?>
-
 
 <div class="container mt-4">
   <!-- Ligne avec la couleur success de Bootstrap -->
@@ -45,5 +44,5 @@ include 'header.php';
 </div>
 
 <?php
-include 'footer.php';
+  require_once (__DIR__ . '/../../includes/footer.php');
 ?>
