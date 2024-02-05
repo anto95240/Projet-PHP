@@ -1,3 +1,7 @@
-.create>row{
-    text-align: center;
+/* .create>.row{
+    max-width:500px !important ;
+} */
+
+#inputEmail4, #inputPassword4{
+    border-color: rgb(0, 0, 0) !important;
 }
