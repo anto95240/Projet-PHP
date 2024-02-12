@@ -675,6 +675,10 @@ progress {
   font-size: 0.875em;
   color: var(--bs-secondary-color);
 }
+
+/* .container{
+  padding-right: calc(var(--bs-gutter-x) * 0.5) !important; 
+} */
 .container,
 .container-fluid,
 .container-lg,
@@ -687,8 +691,8 @@ progress {
   width: 100%;
   padding-right: calc(var(--bs-gutter-x) * 0.5);
   padding-left: calc(var(--bs-gutter-x) * 0.5);
-  margin-right: auto;
-  margin-left: auto;
+  /* margin-right: auto; */
+  /* margin-left: auto; */
 }
 @media (min-width: 576px) {
   .container,
@@ -744,15 +748,16 @@ progress {
   display: flex;
   flex-wrap: wrap;
   margin-top: calc(-1 * var(--bs-gutter-y));
-  margin-right: calc(-0.5 * var(--bs-gutter-x));
-  margin-left: calc(-0.5 * var(--bs-gutter-x));
+  /* margin-right: calc(-0.5 * var(--bs-gutter-x)); */
+  /* margin-left: calc(-0.5 * var(--bs-gutter-x)); */
 }
+
 .row > * {
   flex-shrink: 0;
   width: 100%;
   max-width: 100%;
-  padding-right: calc(var(--bs-gutter-x) * 0.5);
-  padding-left: calc(var(--bs-gutter-x) * 0.5);
+  /* padding-right: calc(var(--bs-gutter-x) * 0.5); */
+  /* padding-left: calc(var(--bs-gutter-x) * 0.5); */
   margin-top: var(--bs-gutter-y);
 }
 .col {
