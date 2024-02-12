@@ -14,11 +14,11 @@ if(isset($_POST['product_delete_multiple_btn']))
     if($query_run)
     {
         $_SESSION['status'] = "Product Deleted Successfully";
-        header("Location: index.php");
+        header("Location: admin.php");
     }
     else
     {
         $_SESSION['status'] = "Product Not Deleted";
-        header("Location: index.php");
+        header("Location: admin.php");
     }
 }

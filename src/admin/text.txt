@@ -31,22 +31,23 @@ document.addEventListener('DOMContentLoaded', function() {
         const productQuantity = document.getElementById('productQuantity').value;
 
         // Ajoutez le nouveau produit au tableau
-        products.push({
-            id: products.length, // Utilisez la longueur du tableau comme identifiant unique
-            name: productName,
-            category: productCat,
-            price: productPrice,
-            description: productDescription,
-            quantity: productQuantity
-        });
+        addProduct(productName, productCat, productPrice, productDescription, productQuantity);
 
         // Mettez à jour l'affichage des produits sur la page
         renderProducts();
-
-        // Enregistre les produits dans le stockage local
-        localStorage.setItem('products', JSON.stringify(products));
     });
 
+    // Ajoutez un écouteur d'événements pour le clic sur le bouton "Modifier"
+    document.getElementById('btnModifier').addEventListener('click', function() {
+        // Votre logique de modification de produit ici...
+    });
+
+    // Ajoutez un écouteur d'événements pour le clic sur le bouton "Supprimer tout"
+    document.getElementById('btnSupprimerTout').addEventListener('click', function() {
+        // Votre logique de suppression de tous les produits ici...
+    });
+
+    // Fonction pour afficher les produits
     function renderProducts() {
         // Videz la liste des produits affichée sur la page
         productList.innerHTML = '';
@@ -65,8 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Ajouter la checkbox et le bouton "Supprimer" si nous sommes sur la page admin.php
             if (isAdminPage) {
                 productCard += `
-                            <button class="btn btn-danger delete-product">Supprimer</button>
-                            <input class="form-check-input product-checkbox" type="checkbox" value="${product.id}">`;
+                            <button class="btn btn-danger delete-product">Supprimer</button>`;
             }
 
             productCard += `
@@ -79,21 +79,22 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Fonction pour ajouter un produit dans le tableau et le stockage local
+    function addProduct(name, category, price, description, quantity) {
+        // Ajoutez le nouveau produit au tableau
+        products.push({
+            id: products.length + 1, // Utilisez la longueur du tableau plus un comme identifiant unique
+            name: name,
+            category: category,
+            price: price,
+            description: description,
+            quantity: quantity
+        });
 
-    // Gestionnaire d'événements pour la modification de produit
-    productList.addEventListener('change', function(event) {
-        if (event.target.matches('.product-checkbox')) {
-            const productId = parseInt(event.target.value);
-            const selectedProduct = products.find(product => product.id === productId);
+        // Enregistrez les produits mis à jour dans le stockage local
+        localStorage.setItem('products', JSON.stringify(products));
+    }
 
-            // Remplir les champs du formulaire avec les valeurs du produit sélectionné
-            document.getElementById('productName').value = selectedProduct.name;
-            document.getElementById('productCat').value = selectedProduct.category;
-            document.getElementById('productPrice').value = selectedProduct.price;
-            document.getElementById('productDescription').value = selectedProduct.description;
-            document.getElementById('productQuantity').value = selectedProduct.quantity;
-        }
-    });
-
+    // Ajoutez d'autres fonctionnalités ici...
 
 });
