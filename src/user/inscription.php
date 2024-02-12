@@ -1,5 +1,6 @@
 <!-- avec php on récupère l'header du site (la ou on a la balise body qui s'ouvre sans se fermer)-->
 <?php
+  $currentPage = 'moncompte';
   require_once (__DIR__ . '/../../includes/header.php');
 ?>
 <section id="form">
