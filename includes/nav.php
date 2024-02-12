@@ -23,7 +23,7 @@
           mon compte
           </a>  
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="">Se connecter</a></li>
+            <li><a class="dropdown-item" href="/src/connexion/connexion.php">Se connecter</a></li>
             <li><a class="dropdown-item" href="/src/user/inscription.php">Voir mon profil</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Se déconnecter</a></li>
