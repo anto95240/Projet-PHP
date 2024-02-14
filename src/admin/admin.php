@@ -1,10 +1,11 @@
 <?php
   $currentPage = '';
   require_once (__DIR__ . '/../../includes/header.php');
-  // require_once (__DIR__ . '/../../config/database.php');
+  require_once (__DIR__ . '/../../config/database.php');
 
   // Inclure les fonctions de gestion des produits
-  require_once (__DIR__ . '/btn_admin.php');
+  require_once (__DIR__ . '/btn_admin/btn_add.php');
+//   require_once (__DIR__ . '/btn_suppr.php');
   require_once (__DIR__ . '/affichage.php');
 
   // Récupérer le nombre de produits par catégorie
@@ -12,195 +13,115 @@
 
   $Produits = afficherProduit();
 
+    // Vérifier si une catégorie est sélectionnée
+    if (isset($_GET['category'])) {
+        // Récupérer les produits de la catégorie sélectionnée
+        $selectedCategory = $_GET['category'];
+        $Produits = afficherProduitParCategorie($selectedCategory);
+        $numFilters = 1; // Un filtre est appliqué
+    } else {
+        $numFilters = 0; // Aucun filtre n'est appliqué
+    }
+
+    // Vérifier si le bouton "Supprimer le filtre" a été cliqué
+    if (isset($_GET['clear_filter'])) {
+        $Produits = afficherProduit();
+        unset($_GET['category']); // Supprimer la variable de catégorie de l'URL
+        $numFilters = 0; // Réinitialiser le nombre de filtres à 0
+    }
+
+
 ?>
 
+<!-- <body> -->
+
+<style>
+    .tab-registers { 
+        font-size: 20px;
+    }
+    .tabs .tab-registers {
+        display: flex;
+        background-color: RGB(255, 255, 255);
+    }
+    .tabs .btn_onglet {
+        padding: 0.5em;
+        background-color: RGB(255, 255, 255);
+        border: none;
+        font: inherit;
+    }
+    .tabs .tab-bodies {
+        padding: 0.5em;
+        background-color: RGB(235, 235, 235);
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+    .tab-bodies{
+        width: 100%;
+    }
+    .tabs button.active-tab {
+        background-color: rgb(235, 235, 235);
+    }
+</style>
+
 <main id="admin">
-    <div class="py-5">
-        <div class="container-fluid d-flex flex-row gap-5 justify-content-around">
-          <h1 class="btn btn-secondary fs-4" id="btnAdd">AJOUTER</h1>
-          <h1 class="btn btn-secondary fs-4" id="btnMod">MODIFIER</h1>
-          <h1 class="btn btn-secondary fs-4" id="btnSup">SUPPRIMER</h1>
+    <div class="py-5 tabs d-flex flex-column align-items-center">
+        <div class="d-flex gap-5 tab-registers">
+            <button class="btn_onglet active-tab text-decoration-underline">AJOUTER</button>
+            <button class="btn_onglet text-decoration-underline">MODIFIER</button>
+            <button class="btn_onglet text-decoration-underline">SUPPRIMER</button>
         </div>
-        <div class="py-5 create container-fluid"  id="createSection">
-          <div class="container-fluid d-flex gap-3">
-            <div class="container me-2 col-3">
-                <div class="row d-flex flex-column">
-                    <h5 class="pb-2 text-center">Création de produit</h5>
-                    <div class="form-column bg-light">
-                        <form method="post">
-                            <div class="form-floating p-2">
-                                <input type="text" class="form-control bg-white" id="productName" name="productName" placeholder="name">
-                                <label class="bg-transparent" for="productName">Name</label>
-                            </div>
-                            <div class="form-floating p-2">
-                                <textarea class="form-control" name="productDescription" id="productDescription" placeholder="description" style="height: 100px"></textarea>
-                                <label for="productDescription">Description</label>
-                            </div>
-                            <div class="form-floating p-2">
-                                <input type="text" class="form-control bg-white" id="productCat" name="productCat" placeholder="categorie">
-                                <label class="bg-transparent" for="productCat">Catégories</label>
-                            </div>
-                            <div class="form-floating p-2">
-                                <input type="number" class="form-control bg-white" id="productPrice" name="productPrice" placeholder="prix">
-                                <label class="bg-transparent" for="productPrice">Prix</label>
-                            </div>
-                            <divw class="form-floating p-2">
-                                <input type="number" class="form-control bg-white" id="productQuantity" name="productQuantity" placeholder="quantite">
-                                <label class="bg-transparent" for="productQuantity">Quantité</label>
-                            </div>
-                            <div class="mx-auto my-3 text-center">
-                              <button type="submit" class="btn btn-primary" id="btnAjouter">Ajouter</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="container bg-light col-2 cat" style="height:150px !important; width:20rem !important;">
-                <div class="row">
-                  <h5 class="text-center">Liste des catégories</h5>
-                  <div class="column mt-3 ms-4">
-                        <?php foreach ($countProductsByCategory as $category) {
-                            echo "<a href=\"#\">" . $category['category'] . " (" . $category['product_count'] . ")</a><br>";
-                        }?>
-                  </div>
-                </div>
-            </div>
-            <div class="container product col-7 gap-5 w-50 text-center d-flex flex-wrap" style="gap: 5rem !important;" id="productList">
-              <?php foreach($Produits as $product): ?>
-                <div class="row">
-                    <div class="col-md-4 my-1">
-                        <div class="card" style="width: 18rem;">
-                          <!-- <img src="..." class="card-img-top" alt="..."> -->
-                          <div class="card-body">
-                            <h5 class="card-title"><?= $product['Name'] ?></h5>
-                            <p class="card-text"><?= $product['Description'] ?></p>
-                            <p class="card-text"><?= $product['Price'] ?> €</p>
-                            <div class="d-flex justify-content-center align-items-center gap-3">
-                              <a href="/src/produit/produit.php?product=1&image=image1.jpg" class="btn btn-primary">Voir plus</a>
-                            
-                            <!-- <button class="btn btn-danger delete-product" data-product-id="<?= $product['ProductId'] ?>">Supprimer</button> -->
-                            <input class="form-check-input product-checkbox" type="checkbox" value="<?= $product['ProductId'] ?>">
-                          
-                            </div>
-                            </div>
-                        </div>
-                    </div>   
-                </div>
-                <?php endforeach; ?>
-                
-            </div>
-          </div>
-            
-        </div>
-        <!-- Formulaire de modification -->
-        <div class="container-fluid me-2 col-3 modify" style="display: none;" id="modifySection">
-          <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-12">
-                    <div class="card mt-5">
-                        <div class="card-header">
-                            <h4>How to Delete Multiple Data or record using Checkbox in PHP MySQL</h4>
-                        </div>
-                    </div>
-                </div>
-            </div>
-          </div>
-        </div>
-        <!-- Formulaire de suppression -->
-        <div class="container-fluid delete" style="display: none;" id="deleteSection">
-          <div class="container mx-auto">
-              <div class="row justify-content-center">
-                  <div class="col-md-12">
-                      <div class="card mt-5">
-                          <div class="card-header">
-                              <h4>Suppréssion de produit </h4>
-                          </div>
-                      </div>
-                  </div>
+        <div class="tab-bodies">
+            <!-- start Tab creation -->
+            <?php
+                require_once (__DIR__ . '/tab_bodies/creation.php');
+            ?>
+            <!--end Tab creation -->
 
-                  <div class="col-md-12">
+            <!--start Tab modification -->
+            <?php
+                require_once (__DIR__ . '/tab_bodies/modif.php');
+            ?>
+            <!--end Tab modification -->
 
-                <?php 
-                    if(isset($_SESSION['status']))
-                    {
-                        ?>
-                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                            <strong>Hey!</strong> <?php echo $_SESSION['status']; ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        <?php
-                        unset($_SESSION['status']);
-                    }
-                ?>
-
-                <div class="card mt-4">
-                    <div class="card-body">
-                        <form action="code.php" method="POST">
-                            <table class="table table-bordered table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            <button type="submit" name="product_delete_multiple_btn" class="btn btn-danger">Delete</button>
-                                        </th>
-                                        <th>ProductId</th>
-                                        <th>CategorieId</th>
-                                        <th>Name</th>
-                                        <th>Description</th>
-                                        <th>Price</th>
-                                        <th>stock_Quantity</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                        $con = mysqli_connect("localhost","root","","e-commerce");
-
-                                        $query = "SELECT * FROM product_Table";
-                                        $query_run  = mysqli_query($con, $query);
-
-                                        if(mysqli_num_rows($query_run) > 0)
-                                        {
-                                            foreach($query_run as $row)
-                                            {
-                                                ?>
-                                                <tr>
-                                                    <td style="width:10px; text-align: center;">
-                                                        <input type="checkbox" name="product_delete_id[]" value="<?= $row['ProductId']; ?>">
-                                                    </td>
-                                                    <td><?= $row['ProductId']; ?></td>
-                                                    <td><?= $row['CategorieId']; ?></td>
-                                                    <td><?= $row['Name']; ?></td>
-                                                    <td><?= $row['Description']; ?></td>
-                                                    <td><?= $row['Price']; ?></td>
-                                                    <td><?= $row['stock_Quantity']; ?></td>
-                                                </tr>
-                                                <?php
-                                            }
-                                        }
-                                        else
-                                        {
-                                            ?>
-                                                <tr>
-                                                    <td colspan="5">No Record Found</td>
-                                                </tr>
-                                            <?php
-                                        }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </form>
-                    </div>
-                </div>
-                  </div>
-            
-              </div>
-          </div>
+            <!--start Tab suppresssion -->
+            <?php
+                require_once (__DIR__ . '/tab_bodies/suppr.php');
+            ?>
+            <!--end Tab suppresssion -->
         </div>
     </div>
 </main>
 
-<script src="/../../assets/js/onglet.js"></script>
+<script>
+    Array.from(document.querySelectorAll('.tabs')).forEach((tab_container, TabID) => {
+        const registers = tab_container.querySelector('.tab-registers');
+        const bodies = tab_container.querySelector('.tab-bodies');
+
+        Array.from(registers.children).forEach((el, i) => {
+          el.setAttribute('aria-controls', `${TabID}_${i}`)
+          bodies.children[i]?.setAttribute('id', `${TabID}_${i}`)
+        
+          el.addEventListener('click', (ev) => {
+            let activeRegister = registers.querySelector('.active-tab');
+            activeRegister.classList.remove('active-tab')
+            activeRegister = el;
+            activeRegister.classList.add('active-tab')
+            changeBody(registers, bodies, activeRegister)
+          })
+      })
+    })
 
 
+    function changeBody(registers, bodies, activeRegister) {
+        Array.from(registers.children).forEach((el, i) => {
+            if (bodies.children[i]) {
+                bodies.children[i].style.display = el == activeRegister ? 'block' : 'none'
+            }
+        
+            el.setAttribute('aria-expanded', el == activeRegister ? 'true' : 'false')
+        })
+    }
+</script>
 
 <?php
 require_once (__DIR__ . '/../../includes/footer.php');

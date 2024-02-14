@@ -1,27 +1,36 @@
 <?php
-  // Inclure le header
-  $currentPage = '';
-  require_once (__DIR__ . '/../../includes/header.php');
+// Inclure le header
+$currentPage = '';
+require_once (__DIR__ . '/../../includes/header.php');
 
-  // Vérifier si l'identifiant du produit est passé dans les paramètres d'URL
-  if(isset($_GET['product']) && isset($_GET['image'])) {
-      // Récupérer l'identifiant du produit
-      $productId = $_GET['product'];
-      $imageName = $_GET['image'];
-      
-      // Vous pouvez utiliser $productId pour récupérer les données du produit depuis votre source de données (base de données, etc.)
-      // Exemple de données fictives
-      $productName = "Nom du produit $productId";
-      $productPrice = "Prix du produit $productId";
-      $productDescription = "Description du produit $productId";
-      $productDeliveryTime = "Délai de livraison du produit $productId";
-    //   echo '<img src="/chemin/vers/votre/dossier/images/' . $imageName . '" alt="Image du produit">';
+require_once (__DIR__ . '/../admin/affichage.php');
 
-  } else {
-      // Rediriger vers une page d'erreur si aucun identifiant de produit n'est passé
-      header("Location: /error.php");
-      exit();
-  }
+// Vérifier si l'identifiant du produit est passé dans les paramètres d'URL
+if(isset($_GET['product']) && isset($_GET['image'])) {
+    // Récupérer l'identifiant du produit
+    $productId = $_GET['product'];
+    $imageName = $_GET['image'];
+    
+    // Récupérer les informations du produit depuis la base de données en fonction de son identifiant
+    $produit = afficherProduitParId($productId);
+
+    // Vérifier si le produit existe
+    if($produit) {
+        // Récupérer les informations du produit
+        $productName = $produit['Name'];
+        $productPrice = $produit['Price'];
+        $productDescription = $produit['Description'];
+        $productDeliveryTime = "Délai de livraison du produit $productId";
+    } else {
+        // Rediriger vers une page d'erreur si le produit n'existe pas
+        header("Location: /error.php");
+        exit();
+    }
+} else {
+    // Rediriger vers une page d'erreur si aucun identifiant de produit n'est passé
+    header("Location: /error.php");
+    exit();
+}
 ?>
 
 <main id="product">
@@ -43,7 +52,7 @@
                 <div class="column d-flex flex-column gap-5">
                     <div class="col bg-light">
                         <h5 class="text-center"><?php echo $productName; ?></h5>
-                        <h5 class="text-center"><?php echo $productPrice; ?></h5>
+                        <h5 class="text-center"><?php echo $productPrice; ?> €</h5>
                     </div>
                     <div class="col bg-light">
                         <h5 class="text-center"><?php echo $productDescription; ?></h5>
@@ -55,7 +64,7 @@
                     <div class="col-3 my-1">
                         <div class="card" style="width: 18rem;">
                             <div class="card-body">
-                                <p class="card-text"><?php echo $productPrice; ?></p>
+                                <p class="card-text"><?php echo $productPrice; ?> €</p>
                                 <p class="card-text"><?php echo $productDeliveryTime; ?></p>
                                 <p class="card-text">
                                     <select id="inputState">

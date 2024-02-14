@@ -1,13 +1,6 @@
 <?php
 session_start();
 
-// if (!isset($_SESSION['user_id'])) {
-//     if (strpos($_SERVER['REQUEST_URI'], 'item') !== false) {
-//         header("Location:/src/user/login.php");
-//         exit();
-//     }
-// }
-
 require_once (__DIR__ . '/global.php');
 
 try {
