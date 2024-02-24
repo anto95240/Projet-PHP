@@ -10,7 +10,22 @@
 
   updateQuantity();
 
-  deleteProductCart()
+  deleteProductCart();
+
+  // Vérifie si l'utilisateur a cliqué sur le bouton "AJOUTER AU PANIER"
+  if(isset($_POST['add_to_command']) && isset($_SESSION['user_id'])){
+    // Récupérer l'identifiant de l'utilisateur depuis la session
+    $UserId = $_SESSION['user_id'];
+    
+    // Récupérer la date et l'heure actuelles
+    $CommandDate = date('Y-m-d H:i:s');
+
+    $CommandStatut = "commanded";
+
+    $sql = "INSERT INTO command_table (UserId, CommandDate, CommandStatut) VALUES (?, ?, ?)";
+    $stmt = $access->prepare($sql);
+    $stmt->execute([$UserId, $CommandDate, $CommandStatut]);
+}
 
 ?>
 
@@ -89,7 +104,9 @@
                   <h5 class="card-title ms-5">Total à Payer</h5>
                   <p class="card-text">Prix Total : <?= $totalPrice ?> €</p>
                   <p class="card-text">Nombre Total de Produits : <?= $totalProducts ?></p>
-                  <a href="#" class="btn btn-primary">Commander</a>
+                  <form method="post" class="mx-auto" action="">
+                    <button type="submit" name="add_to_command" class="btn btn-primary">Commander</button>
+                  </form>
                 </div>
               </div>
             </div>

@@ -31,7 +31,7 @@
   
     // Vérifie si l'utilisateur a cliqué sur le bouton "AJOUTER AU PANIER"
     if(isset($_POST['add_to_cart']) && isset($_SESSION['user_id'])) {
-        // Récupre l'identifiant du produit
+        // Récupère l'identifiant du produit
         $productId = isset($_GET['product']) ? $_GET['product'] : null;
         // Récupèrer l'identifiant de l'utilisateur depuis la session
         $userId = $_SESSION['user_id'];
