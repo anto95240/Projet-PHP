@@ -1,26 +1,28 @@
 <?php
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Récupérer les valeurs des champs de formulaire
-    $name = $_POST['productName'];
-    $category = $_POST['productCat'];
-    $price = $_POST['productPrice'];
-    $description = $_POST['productDescription'];
-    $quantity = $_POST['productQuantity'];
+    // Récupère les valeurs des champs de formulaire
+    $name = $_POST['product_name'];
+    $image = $_POST['product_image'];
+    $description = $_POST['product_description'];
+    $category = $_POST['product_category'];
+    $price = $_POST['product_price'];
+    $quantity = $_POST['product_quantity'];
 
-    // Appeler la fonction pour ajouter un produit avec les valeurs récupérées
-    addProduct($name, $category, $price, $description, $quantity);
+    addProduct($category, $name, $image, $description, $price, $quantity);
 }
 
-function addProduct($name, $category, $price, $description, $quantity) {
+// Fonction pour faire une insertion de produit
+function addProduct($category, $name, $image, $description, $price, $quantity) {
     global $access;
 
-    // Insérer la catégorie dans la table categorie_table
+     // Insert la catégorie dans la table categorie_table
     $reqCategory = $access->prepare("INSERT INTO categorie_table (category) VALUES (?)");
     $reqCategory->execute(array($category));
-    $categoryId = $access->lastInsertId(); // Récupérer l'ID de la catégorie nouvellement insérée
+    $categoryId = $access->lastInsertId(); // Récupérer l'ID de la catégorie insérée
 
-    // Insérer le produit dans la table product_Table
-    $reqProduct = $access->prepare("INSERT INTO product_Table (Name, CategorieId, Price, Description, stock_Quantity) VALUES (?, ?, ?, ?, ?)");
-    $reqProduct->execute(array($name, $categoryId, $price, $description, $quantity));
+    // Insert le produit dans la table product_Table
+    $reqProduct = $access->prepare("INSERT INTO product_Table (CategorieId, Name, Image, Description, Price, stock_Quantity) VALUES (?, ?, ?, ?, ?, ?)");
+    $reqProduct->execute(array($categoryId, $name, $image, $description, $price, $quantity));
 }
+

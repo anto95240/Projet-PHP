@@ -3,33 +3,34 @@
   require_once (__DIR__ . '/../../includes/header.php');
   require_once (__DIR__ . '/../../config/database.php');
 
-  // Inclure les fonctions de gestion des produits
+  // Inclue les fonctions de gestion des produits
   require_once (__DIR__ . '/btn_admin/btn_add.php');
-//   require_once (__DIR__ . '/btn_suppr.php');
+  require_once (__DIR__ . '/btn_admin/btn_mod.php');
+  require_once (__DIR__ . '/btn_admin/btn_suppr.php');
   require_once (__DIR__ . '/affichage.php');
 
-  // Récupérer le nombre de produits par catégorie
+  // Récupère le nombre de produits par catégorie
   $countProductsByCategory = countProductsByCategory();
 
+  // Récupère les informations du produit depuis la DB  
   $Produits = afficherProduit();
 
-    // Vérifier si une catégorie est sélectionnée
+    // Vérifie si une catégorie est sélectionnée
     if (isset($_GET['category'])) {
-        // Récupérer les produits de la catégorie sélectionnée
+        // Récupère les produits de la catégorie sélectionnée
         $selectedCategory = $_GET['category'];
         $Produits = afficherProduitParCategorie($selectedCategory);
-        $numFilters = 1; // Un filtre est appliqué
+        $numFilters = 1; // Il y a 1 seul filtre  appliqué
     } else {
-        $numFilters = 0; // Aucun filtre n'est appliqué
+        $numFilters = 0; // Il n'y a aucun filtre 
     }
 
-    // Vérifier si le bouton "Supprimer le filtre" a été cliqué
+    // Vérifie si le lien "Supprimer le filtre" a été cliqué
     if (isset($_GET['clear_filter'])) {
         $Produits = afficherProduit();
-        unset($_GET['category']); // Supprimer la variable de catégorie de l'URL
-        $numFilters = 0; // Réinitialiser le nombre de filtres à 0
+        unset($_GET['category']); // Supprime la variable de catégorie de l'URL
+        $numFilters = 0; // Réinitialise le nombre de filtres à 0
     }
-
 
 ?>
 
@@ -92,6 +93,7 @@
     </div>
 </main>
 
+<!-- Permet de faire la gestion des différent onglet (Ajouter, Modifier, Supprimer) -->
 <script>
     Array.from(document.querySelectorAll('.tabs')).forEach((tab_container, TabID) => {
         const registers = tab_container.querySelector('.tab-registers');

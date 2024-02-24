@@ -1,9 +1,30 @@
-  <header id="navbar">
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+  session_start();
+}
+$currentPage = ''; 
+
+// Vérifier si l'utilisateur est connecté
+$userName = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : '';
+$isLoggedIn = isset($_SESSION['user_id']);
+
+// Vérifier si l'utilisateur est connecté
+if ($isLoggedIn) {
+    $loginButtonClass = 'd-none'; // Si l'utilisateur est connecté, le bouton de déconnexion est affiché
+    $logoutButtonClass = ''; // Si l'utilisateur est connecté, le bouton de connexion est caché
+} else {
+    $loginButtonClass = ''; // Si l'utilisateur n'est pas connecté, le bouton de connexion est affiché
+    $logoutButtonClass = 'd-none'; // Si l'utilisateur n'est pas connecté, le bouton de déconnexion est caché
+}
+
+?>
+
+<header id="navbar">
     <nav class="navbar navbar-expand-lg">
       <div class="container-fluid">
         <a class="logo">
           <img src="/assets/images/logo.png" class="img-fluid" alt="logo">
-        </a>  
+        </a>            
         <div class="input-group justify-content-center ms-5">
             <div class="col-auto">
                 <input type="text" class="form-control" placeholder="Search" aria-label="Recipient's username" aria-describedby="button-addon2">
@@ -19,17 +40,20 @@
               <a class="nav-link text-light text-uppercase <?php echo ($currentPage === 'accueil') ? 'active' : ''; ?>" href="/index.php">accueil</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-light text-uppercase <?php echo ($currentPage === 'monpanier') ? 'active' : ''; ?>" href="/src/panier/panier.php">mon panier</a>
+              <a class="nav-link text-light text-uppercase <?php echo ($currentPage === 'monpanier') ? 'active' : ''; ?>" href="/src/panier/panier.php">mon panier </a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle text-light text-uppercase <?php echo ($currentPage === 'moncompte') ? 'active' : ''; ?>" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="true">
-                mon compte
-              </a>  
+                mon compte  
+              </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="">Se connecter</a></li>
+                <?php if (!empty($userName)) { ?>
+                    <p style="font-size:12px !important;" class="text-dark text-center"><?php echo "Bonjour, $userName"; ?></p>
+                <?php } ?>                    
+                <li class="<?php echo $loginButtonClass; ?>"><a class="dropdown-item" href="/src/connexion/connexion.php">Se connecter</a></li>
                 <li><a class="dropdown-item" href="/src/user/inscription.php">Voir mon profil</a></li>
-                <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="#">Se déconnecter</a></li>
+                <li class="<?php echo $logoutButtonClass; ?>"><hr class="dropdown-divider"></li>
+                <li class="<?php echo $logoutButtonClass; ?>"><a class="dropdown-item" href="/src/connexion/logout.php">Se déconnecter</a></li>
               </ul>
             </li>
             <li class="nav-item">

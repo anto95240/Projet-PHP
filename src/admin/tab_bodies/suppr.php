@@ -11,6 +11,7 @@
                 </div>
                 <div class="col-md-12">
                     <?php 
+                        // Permet de savoir si la Suppression a réussi
                         if(isset($_SESSION['status']))
                         {
                         ?>
@@ -32,6 +33,7 @@
                                                 <button type="submit" name="product_delete_multiple_btn" class="btn btn-danger">Delete</button>
                                             </th>
                                             <th>ProductId</th>
+                                            <th style="width: 10% !important;" >Image</th>
                                             <th>Name</th>
                                             <th>Description</th>
                                             <th>Categorie</th>
@@ -39,49 +41,30 @@
                                             <th>Stock_Quantity</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <?php
-                                            $con = mysqli_connect("localhost","root","","e-commerce");
-                                            $query = "SELECT p.ProductId, p.Name, p.Description, p.Price, p.Stock_Quantity, c.Category
-                                                      FROM categorie_table c
-                                                      INNER JOIN product_table p ON c.CategorieId = p.CategorieId
-                                                      ORDER BY ProductId ASC";
-                                            $query_run  = mysqli_query($con, $query);
-                                            if(mysqli_num_rows($query_run) > 0)
-                                            {
-                                                foreach($query_run as $row)
-                                                {
-                                                    ?>
-                                                    <tr>
-                                                        <td style="width:10px; text-align: center;">
-                                                            <input type="checkbox" name="product_delete_id[]" value="<?= $row['ProductId']; ?>">
-                                                        </td>
-                                                        <td><?= $row['ProductId']; ?></td>
-                                                        <td><?= $row['Name']; ?></td>
-                                                        <td><?= $row['Description']; ?></td>
-                                                        <td><?= $row['Category']; ?></td>
-                                                        <td><?= $row['Price']; ?></td>
-                                                        <td><?= $row['Stock_Quantity']; ?></td>
-                                                    </tr>
-                                                    <?php
-                                                }
-                                            }
-                                            else
-                                            {
-                                                ?>
-                                                    <tr>
-                                                        <td colspan="5">No Record Found</td>
-                                                    </tr>
-                                                <?php
-                                            }
-                                        ?>
+                                    <tbody> 
+                                        <?php foreach($Produits as $product): ?>
+                                            <!-- Affiche les information en fonction des valeurs dans la base de donnée -->
+                                            <tr>
+                                                <td style="width:10px; text-align: center;">
+                                                    <input type="checkbox" name="product_delete_id[]" value="<?= $product['ProductId']; ?>">
+                                                </td>
+                                                <td><?= $product['ProductId']; ?></td>
+                                                <td>
+                                                    <img src="<?= $product['Image'] ?>" style="width: 60% !important;">    
+                                                </td>
+                                                <td><?= $product['Name']; ?></td>
+                                                <td><?= $product['Description']; ?></td>
+                                                <td><?= $product['Category']; ?></td>
+                                                <td><?= $product['Price']; ?></td>
+                                                <td><?= $product['Stock_Quantity']; ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>                                            
                                     </tbody>
                                 </table>
                             </form>
                         </div>
                     </div>
                 </div>
-                              
             </div>
         </div>
     </div>

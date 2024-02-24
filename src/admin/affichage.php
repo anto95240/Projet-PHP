@@ -1,6 +1,7 @@
 <?php
 require_once (__DIR__ . '/../../config/database.php');
 
+// Permet de récupérer toute les informations pour les produits et les catégories
 function afficherProduit() {
     global $access;
 
@@ -14,6 +15,26 @@ function afficherProduit() {
     return $data;
 }
 
+// Permet de récupérer toute les informations pour les produits et les produit qui sont dans le panier
+function afficherCart(){
+    global $access;
+
+    if (isset($_SESSION['user_id'])) {
+        $userId = $_SESSION['user_id'];
+        
+        $req = $access->prepare("SELECT p.Name, p.Image, p.Description, p.Stock_Quantity, p.Price, SUM(c.Quantity) as TotalQuantity, c.CartId
+                            FROM cart_table c
+                            INNER JOIN product_table p ON c.ProductId = p.ProductId
+                            WHERE c.UserId = $userId
+                            GROUP BY c.ProductId");
+        $req->execute();
+        $data = $req->fetchAll(PDO::FETCH_ASSOC);
+        $req->closeCursor();
+        return $data;
+    }
+}
+
+// Permet de compter tous les catégories en fonction de leur Id
 function countProductsByCategory() {
     global $access;
 
@@ -30,6 +51,7 @@ function countProductsByCategory() {
     return $data;
 }
 
+// Permet d'afficher tous les produits aqui ont le même id
 function afficherProduitParId($productId) {
     global $access;
 
@@ -41,7 +63,7 @@ function afficherProduitParId($productId) {
     return $data;
 }
 
-// Fonction pour afficher les produits d'une catégorie spécifique
+// Permet d'afficher tous les produit qui ont les mêmes catégories
 function afficherProduitParCategorie($category)
 {
     global $access;
@@ -58,11 +80,4 @@ function afficherProduitParCategorie($category)
     $data = $req->fetchAll(PDO::FETCH_ASSOC);
     $req->closeCursor();
     return $data;
-}
-// Fonction pour générer le lien de catégorie avec les filtres actifs
-function generateCategoryLink($selectedCategories, $category)
-{
-    $categories = array_diff($selectedCategories, [$category]);
-    $categoriesString = implode(',', $categories);
-    return "?category=$categoriesString";
 }

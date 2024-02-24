@@ -1,50 +1,64 @@
 <?php
-// Inclure le header
-$currentPage = '';
-require_once (__DIR__ . '/../../includes/header.php');
-
-require_once (__DIR__ . '/../admin/affichage.php');
-
-// Vérifier si l'identifiant du produit est passé dans les paramètres d'URL
-if(isset($_GET['product']) && isset($_GET['image'])) {
-    // Récupérer l'identifiant du produit
-    $productId = $_GET['product'];
-    $imageName = $_GET['image'];
+    $currentPage = '';
+    require_once (__DIR__ . '/../../includes/header.php');
+    require_once (__DIR__ . '/../../config/database.php');
     
-    // Récupérer les informations du produit depuis la base de données en fonction de son identifiant
+    require_once (__DIR__ . '/../admin/affichage.php');
+    
+    
+    // Récupère l'identifiant du produit
+    $productId = $_GET['product'];
+    
+    // Récupère les informations du produit depuis la base de données en fonction de son identifiant
     $produit = afficherProduitParId($productId);
-
-    // Vérifier si le produit existe
+    
+    // Vérifie si le produit existe
     if($produit) {
-        // Récupérer les informations du produit
+        // Récupère les informations du produit
+        $productImage= $produit['Image'];
+        $productId= $produit['ProductId'];
         $productName = $produit['Name'];
         $productPrice = $produit['Price'];
         $productDescription = $produit['Description'];
-        $productDeliveryTime = "Délai de livraison du produit $productId";
+        $productDeliveryTime = "Date de livraison du produit $productId";
+        $productStock = $produit['Stock_Quantity'];
     } else {
-        // Rediriger vers une page d'erreur si le produit n'existe pas
+        // Redirige vers une page d'erreur si le produit n'existe pas
         header("Location: /error.php");
         exit();
     }
-} else {
-    // Rediriger vers une page d'erreur si aucun identifiant de produit n'est passé
-    header("Location: /error.php");
-    exit();
-}
+  
+  
+    // Vérifie si l'utilisateur a cliqué sur le bouton "AJOUTER AU PANIER"
+    if(isset($_POST['add_to_cart']) && isset($_SESSION['user_id'])) {
+        // Récupre l'identifiant du produit
+        $productId = isset($_GET['product']) ? $_GET['product'] : null;
+        // Récupèrer l'identifiant de l'utilisateur depuis la session
+        $userId = $_SESSION['user_id'];
+        
+        // Récupèrer la quantité sélectionnée
+        $quantity = isset($_POST['quantity']) ? $_POST['quantity'] : null;
+    
+        $Statut = "reserved";
+    
+        $sql = "INSERT INTO cart_table (UserId, productId, Quantity, Statut) VALUES (?, ?, ?, ?)";
+        $stmt = $access->prepare($sql);
+        $stmt->execute([$userId, $productId, $quantity, $Statut]);
+    
+    }
+
 ?>
 
 <main id="product">
     <div class="return py-3 px-3">
         <a href="/../../index.php" class="btn btn-primary">← RETOUR</a>
-
     </div>
     <div class="py-5 px-5" style="padding-top: 5rem !important;">
         <div class="container-fluid d-flex">
             <div class="container create me-5 col-3">
                 <div class="row bg-light d-flex flex-column">
                     <?php
-                        // Afficher l'image du produit récupérée à partir des paramètres d'URL
-                        echo '<img src="/chemin/vers/votre/dossier/images/' . $imageName . '" alt="Image du produit">';
+                        echo '<img src="' . $productImage . '" alt="Image du produit">';
                     ?>                  
                 </div>
             </div>
@@ -65,22 +79,23 @@ if(isset($_GET['product']) && isset($_GET['image'])) {
                         <div class="card" style="width: 18rem;">
                             <div class="card-body">
                                 <p class="card-text"><?php echo $productPrice; ?> €</p>
-                                <p class="card-text"><?php echo $productDeliveryTime; ?></p>
                                 <p class="card-text">
-                                    <select id="inputState">
-                                        <option selected>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
-                                        <option>6</option>
-                                        <option>7</option>
-                                        <option>8</option>
-                                        <option>9</option>
-                                        <option>10+</option>
-                                    </select>
+                                    <form method="post" class="d-flex flex-column gap-3 w-75 align-items-center mx-auto">
+                                        <select id="inputState" name="quantity">
+                                            <?php
+                                            // Afficher les quantité du produit dans select
+                                            for ($i = 1; $i <= min($productStock, 9); $i++) {
+                                                echo '<option>' . $i . '</option>';
+                                            }
+                                            // Si le stock est supérieur à 10, afficher "10+"
+                                            if ($productStock > 10) {
+                                                echo '<option>10+</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                        <button type="submit" name="add_to_cart" class="btn btn-primary">AJOUTER AU PANIER</button>
+                                    </form>
                                 </p>
-                                <a href="#" class="btn btn-primary">AJOUTER AU PANIER</a>
                             </div>
                         </div>
                     </div>
@@ -91,6 +106,5 @@ if(isset($_GET['product']) && isset($_GET['image'])) {
 </main>
 
 <?php
-  // Inclure le footer
   require_once (__DIR__ . '/../../includes/footer.php');
 ?>
