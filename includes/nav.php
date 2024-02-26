@@ -51,7 +51,7 @@ if ($isLoggedIn) {
                     <p style="font-size:12px !important;" class="text-dark text-center"><?php echo "Bonjour, $userName"; ?></p>
                 <?php } ?>                    
                 <li class="<?php echo $loginButtonClass; ?>"><a class="dropdown-item" href="/src/connexion/connexion.php">Se connecter</a></li>
-                <li><a class="dropdown-item" href="/src/user/inscription.php">Voir mon profil</a></li>
+                <li><a class="dropdown-item" href="/src/user/account.php">Voir mon profil</a></li>
                 <li class="<?php echo $logoutButtonClass; ?>"><hr class="dropdown-divider"></li>
                 <li class="<?php echo $logoutButtonClass; ?>"><a class="dropdown-item" href="/src/connexion/logout.php">Se déconnecter</a></li>
               </ul>
