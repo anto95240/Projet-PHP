@@ -27,7 +27,7 @@
                                         <tr>
                                             <th>Commande</th>
                                             <th>Price</th>
-                                            <th>Nombre article</th>
+                                            <th>Nombre d'article</th>
                                             <th>Date</th>
                                         </tr>
                                     </thead>

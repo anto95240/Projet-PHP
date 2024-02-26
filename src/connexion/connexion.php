@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="form-column bg-light">
                     <form method="post">
                         <div class="form-floating p-2">
-                            <input type="email" class="form-control bg-white" name="Email" placeholder="Email">
+                            <input type="text" class="form-control bg-white" name="Email" placeholder="Email">
                             <label class="bg-transparent">Email</label>
                         </div>
                         <div class="form-floating p-2">
