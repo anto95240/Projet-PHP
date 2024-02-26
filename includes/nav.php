@@ -57,7 +57,7 @@ if ($isLoggedIn) {
               </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link text-light text-uppercase <?php echo ($currentPage === 'commandes') ? 'active' : ''; ?>" href="#">mes commandes</a>
+              <a class="nav-link text-light text-uppercase <?php echo ($currentPage === 'commandes') ? 'active' : ''; ?>" href="/src/command/command.php">mes commandes</a>
             </li>
             <li class="nav-item">
               <a class="nav-link text-light text-uppercase <?php echo ($currentPage === 'factures') ? 'active' : ''; ?>" href="/src/facture/factures.php">mes factures</a>

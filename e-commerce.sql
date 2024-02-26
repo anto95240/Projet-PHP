@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS  user_Table (
     UserId        INTEGER       NOT NULL PRIMARY KEY,
     Email         VARCHAR (255) NOT NULL,
-    Password_hash VARCHAR (100) NOT NULL
+    Password VARCHAR (100) NOT NULL
 );
 
 
@@ -28,10 +28,11 @@ CREATE TABLE IF NOT EXISTS  address_Table (
 CREATE TABLE IF NOT EXISTS  product_Table (
     ProductId      INTEGER           NOT NULL PRIMARY KEY,
     CategorieId    INTEGER           NOT NULL,
-    Name           VARCHAR (100)     NOT NULL,
+    Name           TEXT              NOT NULL,
+    Image          TEXT              NOT NULL,
     Description    TEXT              NOT NULL,
     Price          INTEGER           NOT NULL,
-    stock_Quantity INTEGER           NOT NULL,
+    Stock_Quantity INTEGER           NOT NULL,
     FOREIGN KEY (CategorieId) REFERENCES categorie_Table (CategorieId)
 );
 
@@ -52,7 +53,8 @@ CREATE TABLE IF NOT EXISTS  cart_Table (
 CREATE TABLE IF NOT EXISTS  command_Table (
     CommandId     INTEGER          NOT NULL PRIMARY KEY,
     UserId        INTEGER          NOT NULL,
-    ProductId     INTEGER          NOT NULL,
+    Quantity	  INTEGER		   NOT NULL,
+	TotalPrice    INTEGER		   NOT NULL,      
     CommandDate   DATE             NOT NULL,
     CommandStatut VARCHAR (30)     NOT NULL,
     FOREIGN KEY (UserId) REFERENCES user_Table (UserId),

@@ -21,10 +21,26 @@
     $CommandDate = date('Y-m-d H:i:s');
 
     $CommandStatut = "commanded";
+        // Insérer les produits de la commande dans la table jointure_table
+    foreach($Cart as $cartItem) {
+        // $productId = $cartItem['ProductId'];
+        $quantity = $cartItem['TotalQuantity'];
+        $price = $cartItem['Price'];
+        $totalPrice = $price * $quantity;
 
-    $sql = "INSERT INTO command_table (UserId, CommandDate, CommandStatut) VALUES (?, ?, ?)";
+      $sql = "INSERT INTO command_table ( UserId, Quantity, TotalPrice, CommandDate, CommandStatut) VALUES (?, ?, ?, ?, ?)";
+      $stmt = $access->prepare($sql);
+      $stmt->execute([$UserId, $quantity, $totalPrice, $CommandDate, $CommandStatut]);
+
+    }
+
+
+
+    // Vider le panier après la commande
+    // Supprimer tous les produits du panier de l'utilisateur actuel
+    $sql = "DELETE FROM cart_table WHERE UserId = ?";
     $stmt = $access->prepare($sql);
-    $stmt->execute([$UserId, $CommandDate, $CommandStatut]);
+    $stmt->execute([$UserId]);
 }
 
 ?>
@@ -102,7 +118,7 @@
               <div class="card" style="width: 18rem; height: 15rem;">
                 <div class="card-body text-left pt-2 gap-3 d-flex flex-column align-items-left">
                   <h5 class="card-title ms-5">Total à Payer</h5>
-                  <p class="card-text">Prix Total : <?= $totalPrice ?> €</p>
+                  <p class="card-text" >Prix Total : <?= $totalPrice ?> €</p>
                   <p class="card-text">Nombre Total de Produits : <?= $totalProducts ?></p>
                   <form method="post" class="mx-auto" action="">
                     <button type="submit" name="add_to_command" class="btn btn-primary">Commander</button>

@@ -5,7 +5,7 @@
   require_once (__DIR__ . '/../admin/affichage.php');
   require_once (__DIR__ . '/../../config/database.php');
 
-  $userId = $_SESSION['user_id']; // Supposons que vous stockez l'ID de l'utilisateur dans la session
+  $userId = $_SESSION['user_id'];
   $query = "SELECT a.*, u.*
             FROM user_table u
             INNER JOIN address_table a ON u.UserId = a.UserId
@@ -68,11 +68,11 @@ function updateUser($userId, $addressId, $firstName, $lastName, $email, $passwor
           <div class="d-flex gap-5 flex-column">
             <div class="form-group col-md-6">
               <label>Prenom</label>
-              <input type="text" class="form-control" name="address_lastName" placeholder="Prenom" value="<?php echo $user['FirstName']; ?>">
+              <input type="text" class="form-control" name="address_firstName" placeholder="Prenom" value="<?php echo $user['FirstName']; ?>">
             </div>
             <div class="form-group col-md-6">
               <label>Nom</label>
-              <input type="text" class="form-control" name="address_firstName" placeholder="Nom" value="<?php echo $user['LastName']; ?>">
+              <input type="text" class="form-control" name="address_lastName" placeholder="Nom" value="<?php echo $user['LastName']; ?>">
             </div>
              <div class="form-group col-md-6">
               <label>Email</label>
