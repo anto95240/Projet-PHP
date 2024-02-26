@@ -44,7 +44,7 @@ function updateUser($userId, $addressId, $firstName, $lastName, $email, $passwor
   $updateUserQuery->execute([$email, $password, $userId]); 
 
   // Mise à jour du user dans la table address_table
-  $updateAddressQuery = $access->prepare("UPDATE address_table SET UserId = ?, FirstName = ?, LastName = ?, StreetAddress = ?, City = ?, State = ?, Country = ?, PostalCode = ? WHERE AdressId = ?");
+  $updateAddressQuery = $access->prepare("UPDATE address_table SET UserId = ?, FirstName = ?, LastName = ?, StreetAddress = ?, City = ?, State = ?, Country = ?, PostalCode = ? WHERE AddressId = ?");
   $updateAddressQuery->execute([$userId, $firstName, $lastName, $address, $city, $state, $country, $postalCode, $addressId]);
 
   // Vérifier si les mises à jour ont réussi
