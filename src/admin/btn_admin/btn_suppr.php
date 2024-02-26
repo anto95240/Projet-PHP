@@ -24,9 +24,9 @@ function deleteProducts($productIds) {
 
     // Vérifier si les suppressions ont réussi
     if ($deleteProductsQuery && $deleteCategoriesQuery) {
-        $_SESSION['status'] = "Products deleted successfully";
+        $_SESSION['statusSuppr'] = "Products deleted successfully";
     } else {
-        $_SESSION['status'] = "Error: Products not deleted";
+        $_SESSION['statusSuppr'] = "Error: Products not deleted";
     }
     
     // Redirige vers la page admin.php après que la suppression ait réussit

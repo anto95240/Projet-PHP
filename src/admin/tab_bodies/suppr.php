@@ -12,15 +12,15 @@
                 <div class="col-md-12">
                     <?php 
                         // Permet de savoir si la Suppression a réussi
-                        if(isset($_SESSION['status']))
+                        if(isset($_SESSION['statusSuppr']))
                         {
                         ?>
                             <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                <strong>Hey!</strong> <?php echo $_SESSION['status']; ?>
+                                <strong>Hey!</strong> <?php echo $_SESSION['statusSuppr']; ?>
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         <?php
-                        unset($_SESSION['status']);
+                        unset($_SESSION['statusSuppr']);
                         }
                     ?>
                     <div class="card mt-4">

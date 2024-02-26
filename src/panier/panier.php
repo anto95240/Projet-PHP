@@ -1,46 +1,54 @@
 <?php
-  $currentPage = 'monpanier';
-  require_once (__DIR__ . '/../../includes/header.php');
-  require_once (__DIR__ . '/../../config/database.php');
-  
-  require_once (__DIR__ . '/../admin/affichage.php');
-  require_once (__DIR__ . '/update_cart.php');
-  
-  $Cart=afficherCart();
+$currentPage = 'monpanier';
+require_once (__DIR__ . '/../../includes/header.php');
+require_once (__DIR__ . '/../../config/database.php');
+require_once (__DIR__ . '/../admin/affichage.php');
+require_once (__DIR__ . '/update_cart.php');
 
-  updateQuantity();
+$Cart = afficherCart();
 
-  deleteProductCart();
+updateQuantity();
+deleteProductCart();
 
-  // Vérifie si l'utilisateur a cliqué sur le bouton "AJOUTER AU PANIER"
-  if(isset($_POST['add_to_command']) && isset($_SESSION['user_id'])){
-    // Récupérer l'identifiant de l'utilisateur depuis la session
-    $UserId = $_SESSION['user_id'];
-    
-    // Récupérer la date et l'heure actuelles
-    $CommandDate = date('Y-m-d H:i:s');
+$Command = afficherCommand() ;
 
-    $CommandStatut = "commanded";
-        // Insérer les produits de la commande dans la table jointure_table
-    foreach($Cart as $cartItem) {
-        // $productId = $cartItem['ProductId'];
-        $quantity = $cartItem['TotalQuantity'];
-        $price = $cartItem['Price'];
-        $totalPrice = $price * $quantity;
+if(isset($_POST['add_to_command']) && isset($_SESSION['user_id'])) {
+  $UserId = $_SESSION['user_id'];
+  $CommandDate = date('Y-m-d H:i:s');
+  $CommandStatut = "commanded";
 
-      $sql = "INSERT INTO command_table ( UserId, Quantity, TotalPrice, CommandDate, CommandStatut) VALUES (?, ?, ?, ?, ?)";
+  // Démarrez une transaction pour garantir l'intégrité des données
+  $access->beginTransaction();
+
+  try { 
+      // Utilisez cet CommandId pour insérer tous les produits de la commande dans la table des commandes
+      $currentProductId = null;
+      foreach($Cart as $cartItem) {
+          if ($currentProductId !== $cartItem['ProductId']) {
+              $currentProductId = $cartItem['ProductId'];
+              $quantity = $cartItem['TotalQuantity'];
+              $price = $cartItem['Price'];
+              $totalPrice = $price * $quantity;
+              $productId = $cartItem['ProductId'];
+
+              $sql = "INSERT INTO command_table (UserId, Quantity, TotalPrice, CommandDate, CommandStatut, ProductId) VALUES (?, ?, ?, ?, ?, ?)";
+              $stmt = $access->prepare($sql);
+              $stmt->execute([$UserId, $quantity, $totalPrice, $CommandDate, $CommandStatut, $productId]);
+          }
+      }
+
+      // Commit de la transaction si tout se passe bien
+      $access->commit();
+
+      // Effacez le panier après la commande
+      $sql = "DELETE FROM cart_table WHERE UserId = ?";
       $stmt = $access->prepare($sql);
-      $stmt->execute([$UserId, $quantity, $totalPrice, $CommandDate, $CommandStatut]);
-
-    }
-
-
-
-    // Vider le panier après la commande
-    // Supprimer tous les produits du panier de l'utilisateur actuel
-    $sql = "DELETE FROM cart_table WHERE UserId = ?";
-    $stmt = $access->prepare($sql);
-    $stmt->execute([$UserId]);
+      $stmt->execute([$UserId]);
+  } catch(PDOException $e) {
+      // En cas d'erreur, annulez la transaction
+      $access->rollBack();
+      echo "Erreur : " . $e->getMessage();
+  }
 }
 
 ?>

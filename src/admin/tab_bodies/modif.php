@@ -12,15 +12,15 @@
                 <div class="col-md-12">
                     <?php 
                         // Permet de savoir si la Modification a réussi
-                        if(isset($_SESSION['status']))
+                        if(isset($_SESSION['statusMod']))
                         {
                         ?>
                             <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                <strong>Hey!</strong> <?php echo $_SESSION['status']; ?>
+                                <strong>Hey!</strong> <?php echo $_SESSION['statusMod']; ?>
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         <?php
-                        unset($_SESSION['status']);
+                        unset($_SESSION['statusMod']);
                         }
                     ?>
                     <div class="card mt-4">
@@ -45,8 +45,8 @@
                                             <tr>
                                                 <td style="width:10px; text-align: center;">
                                                     <button type="submit" name="update_btn" class="btn btn-primary">Update</button>
-                                                    <input type="hidden" name="product_id" value="<?= $product['ProductId']; ?>">
                                                     <input type="hidden" name="categorie_id" value="<?= $product['CategorieId']; ?>">
+                                                    <input type="hidden" name="product_id" value="<?= $product['ProductId']; ?>">
                                                 </td>
                                                 <td><?= $product['ProductId']; ?></td>
                                                 <td><input class="form-control border border-info" type="text" name="product_image" value="<?= $product['Image']; ?>"></td>

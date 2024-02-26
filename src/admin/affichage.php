@@ -15,23 +15,51 @@ function afficherProduit() {
     return $data;
 }
 
-// Permet de récupérer toute les informations pour les produits et les produit qui sont dans le panier
+// Permet de récupérer toute les informations pour les produits qui sont dans le panier
 function afficherCart(){
     global $access;
 
     if (isset($_SESSION['user_id'])) {
         $userId = $_SESSION['user_id'];
         
-        $req = $access->prepare("SELECT p.Name, p.Image, p.Description, p.Stock_Quantity, p.Price, SUM(c.Quantity) as TotalQuantity, c.CartId
+        $req = $access->prepare("SELECT p.*, SUM(c.Quantity) as TotalQuantity, c.CartId
                             FROM cart_table c
                             INNER JOIN product_table p ON c.ProductId = p.ProductId
-                            WHERE c.UserId = $userId
+                            WHERE c.UserId = ?
                             GROUP BY c.ProductId");
-        $req->execute();
+        $req->execute([$userId]);
         $data = $req->fetchAll(PDO::FETCH_ASSOC);
         $req->closeCursor();
         return $data;
     }
+}
+
+// Permet de récupérer toute les informations pour les commandes réaliser
+function afficherCommand() {
+    global $access;
+
+    $req = $access->prepare("SELECT c.*
+                            FROM command_table c
+                            GROUP BY c.CommandId
+                            ORDER BY c.CommandId ASC");
+    $req->execute();
+    $data = $req->fetchAll(PDO::FETCH_ASSOC);
+    $req->closeCursor();
+    return $data;
+}
+
+// Permet de récupérer toute les informations pour les factures 
+function afficherFacture() {
+    global $access;
+
+    $req = $access->prepare("SELECT i.*, c.*
+                            FROM invoices_table i
+                            INNER JOIN command_table c ON i.CommandId = c.CommandId
+                            ORDER BY i.InvoiceId ASC");
+    $req->execute();
+    $data = $req->fetchAll(PDO::FETCH_ASSOC);
+    $req->closeCursor();
+    return $data;
 }
 
 // Permet de compter tous les catégories en fonction de leur Id

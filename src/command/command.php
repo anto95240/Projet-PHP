@@ -1,26 +1,19 @@
 <?php
-  $currentPage = 'commandes';
-  require_once (__DIR__ . '/../../includes/header.php');
-  require_once (__DIR__ . '/afficher_command.php');
+$currentPage = 'commandes';
+require_once (__DIR__ . '/../../includes/header.php');
+require_once (__DIR__ . '/../admin/affichage.php');
 
-  $Command = afficherCommand();
+$Command = afficherCommand();
 
-  $queryProduit = "SELECT p.*
-  FROM product_table p"; // Requête SQL pour récupérer les informations de l'utilisateur et de son adresse
-
-$stmt = $access->prepare($queryProduit);
-$stmt->execute();
-$product = $stmt->fetch(PDO::FETCH_ASSOC); // Récupérer les résultats de la requête
 
 // Vérifie si le formulaire pour la création de la facture a été soumis
 if(isset($_POST['facture_btn'])) {
     // Récupérer les valeurs de la commande sélectionnée
     $commandId = $_POST['command_id'];
     $totalPrice = $_POST['total_price'];
-    $userId = $_SESSION['user_id']; // Supposons que vous stockiez l'ID de l'utilisateur dans la session
+    $userId = $_SESSION['user_id']; 
     $invoiceDate = date('Y-m-d H:i:s');
 
-    // Insérer les valeurs dans la table invoice_table
     $query = "INSERT INTO invoices_table (CommandId, UserId, Total, InvoiceDate) VALUES (?, ?, ?, ?)";
     $stmt = $access->prepare($query);
     $stmt->execute([$commandId, $userId, $totalPrice, $invoiceDate]);
@@ -54,21 +47,44 @@ if(isset($_POST['facture_btn'])) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach($Command as $command): ?>
-                                                <!-- Affiche les information en fonction des valeurs dans la base de donnée -->
-                                                <tr>
-                                                    <td style="width:10px; text-align: center;">
-                                                        <button type="submit" name="facture_btn" class="btn btn-primary">Facture</button>
-                                                        <input type="hidden" name="command_id" value="<?= $command['CommandId']; ?>">
-                                                        <input type="hidden" name="total_price" value="<?= $command['TotalPrice']; ?>">
-                                                    </td>
-                                                    <td><?= $command['CommandId']; ?>    
-                                                    </td>
-                                                    <td><?= $command['TotalPrice']; ?></td>
-                                                    <td><?= $command['Quantity']; ?></td>
-                                                    <td><?= $command['CommandDate']; ?></td>
-                                                </tr>
-                                        <?php endforeach; ?> 
+                                    <?php foreach($Command as $command): ?>
+                                        <!-- Affiche les informations en fonction des valeurs dans la base de données -->
+                                        <tr>
+                                            <td style="width:10px; text-align: center;">
+                                                <!-- Le bouton "Facture" ne sera affiché qu'une seule fois pour chaque commande -->
+                                                <button type="submit" name="facture_btn" class="btn btn-primary">Facture</button>
+                                                <!-- Assurez-vous que les clés existent avant de les utiliser -->
+                                                <input type="hidden" name="command_id" value="<?= isset($command['CommandId']) ? $command['CommandId'] : ''; ?>">
+                                                <input type="hidden" name="total_price" value="<?= isset($command['TotalPrice']) ? $command['TotalPrice'] : ''; ?>">
+                                            </td>
+                                            
+                                            <td>n°<?=$command['CommandId'];?>
+
+                                            <div class="row">
+                                                    <?php
+                                                    // Requête pour récupérer les produits de la commande actuelle
+                                                    $queryProduitsCommande = "SELECT p.*, co.*, ca.*
+                                                                              FROM product_table p
+                                                                              INNER JOIN categorie_Table ca ON p.CategorieId = ca.CategorieId
+                                                                              INNER JOIN command_table co ON p.ProductId = co.ProductId
+                                                                              WHERE co.CommandId = ?";
+                                                    $stmtProduitsCommande = $access->prepare($queryProduitsCommande);
+                                                    $stmtProduitsCommande->execute([isset($command['CommandId']) ? $command['CommandId'] : '']);
+                                                    $produitsCommande = $stmtProduitsCommande->fetchAll(PDO::FETCH_ASSOC);
+                                                                        
+                                                    foreach($produitsCommande as $produitCommande) {
+                                                        echo '<div class="col-4"><p>' . $produitCommande['Quantity'] . ' x ' . $produitCommande['Name'] . ' </br>' . $produitCommande['Description'] . ' </br>' . $produitCommande['Category'] . ' </p></div>';
+                                                    }
+                                                    ?>
+                                                </div>
+                                            </td>
+                                            <td><?= isset($command['TotalPrice']) ? $command['TotalPrice'] : ''; ?></td>
+                                            <td><?= isset($command['Quantity']) ? $command['Quantity'] : ''; ?></td>
+                                            <td><?= isset($command['CommandDate']) ? $command['CommandDate'] : ''; ?></td>
+                                        </tr>
+    
+                                    <?php endforeach; ?>
+
                                     </tbody>
                                 </table>
                             </form>

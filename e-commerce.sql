@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS  cart_Table (
 CREATE TABLE IF NOT EXISTS  command_Table (
     CommandId     INTEGER          NOT NULL PRIMARY KEY,
     UserId        INTEGER          NOT NULL,
+    ProductId     INTEGER          NOT NULL,
     Quantity	  INTEGER		   NOT NULL,
 	TotalPrice    INTEGER		   NOT NULL,      
     CommandDate   DATE             NOT NULL,
