@@ -35,7 +35,7 @@ Avant de commencer, vous devez avoir installé l'un des serveurs suivants :
 - HTML
 - CSS
 - Bootstrap
-- 
+
 ### Réaliser par : 
 - RICHARD Antoine
 - TALAVERA Y NARANJO Amadis
