@@ -1,13 +1,42 @@
-# Projet-PHP : Amadis, Antoine, Yvenlee
+# Projet-PHP : e-commerce
 
- Ceci ! Est un site E-commerce proposant une multitude de produit diverses. Grace à un compte Admin on peut ajouter, modifier ou supprimer un produit qui apparaitrà alors sur la page d'accueil que voici :
-
+Ce projet est un site e-commerce permettant de proposer une multitude de produits divers. Grâce à un compte Admin, vous pouvez ajouter, modifier ou supprimer un produit qui apparaîtra sur la page d'accueil : 
 ![](/accueil.png)
 
+## Prérequis
 
-## Utilisation
+Avant de commencer, vous devez avoir installé l'un des serveurs suivants :
+- [WampServer (pour windows)](https://wampserver.aviatechno.net/)
+- [Mamp (pour mac)](https://www.mamp.info/en/downloads/)
 
-- Avoir télécharger au préalable wamp server (pour windows) ou mamp server (pour mac)
-- télécharger en zip le projet afin de faire l'extraction pour le mettre dans le dossier www de wamp server ou mamp server
-- Importer la base de donnée dans phpMyAdmin depuis wamp server (identifiant: root) ou mamp server (identifiant: root, root)
-- Puis l'ouvrir en ajoutant le projet dans un nouvel virtual host depuis wamp server ou mamp server pour une meilleur simplicité
+## Installation
+
+1. **Téléchargez le projet** :
+   - Téléchargez le fichier ZIP du projet.
+
+2. **Extraction du projet** :
+   - Extrayez le projet et placez-le dans le dossier `www` de votre serveur local (WampServer ou MampServer).
+
+3. **Importation de la base de données** :
+   - Accédez à **phpMyAdmin** depuis votre serveur local (WampServer ou MampServer).
+   - Connectez-vous avec les identifiants suivants :
+     - **WampServer** : Nom d'utilisateur : `root` (pas de mot de passe).
+     - **MampServer** : Nom d'utilisateur : `root`, mot de passe : `root`.
+   - Importez la base de données fournie dans le projet.
+
+4. **Configuration du projet** :
+   - Ouvrez WampServer ou MampServer et ajoutez le projet dans un nouvel hôte virtuel pour plus de simplicité.
+   - Vous pouvez aussi accéder directement au projet via `localhost` dans votre navigateur si vous avez bien configuré le serveur.
+
+## Technologies utilisées
+
+- PHP
+- MySQL
+- HTML
+- CSS
+- Bootstrap
+- 
+### Réaliser par : 
+- RICHARD Antoine
+- TALAVERA Y NARANJO Amadis
+- VONIN-KABEL Yvenlee
